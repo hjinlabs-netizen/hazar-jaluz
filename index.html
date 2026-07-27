@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hazar Jaluz - Premium Jaluzi ve Perde Sistemleri</title>
+  <meta name="description" content="Hazar Jaluz ile mekanlarınıza şıklık katın. Zebra, ahşap, stor, metal ve dikey jaluzi modellerimizi inceleyin, kolayca sipariş verin.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header / Navigasyon -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-link">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <!-- Jaluzi simgesi -->
+            <path d="M19 19H5V5h14v14zM5 3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5zm12 6H7v2h10V9zm0 4H7v2h10v-2zm0 4H7v2h10v-2zm0-12H7v2h10V5z"/>
+          </svg>
+        </div>
+        <span class="logo-text">HAZAR<span>JALUZ</span></span>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#katalog" class="active" id="nav-katalog">Katalog</a></li>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#iletisim">İletişim</a></li>
+          <li><a href="admin.html" class="btn-admin">Yönetim Paneli</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;">
+          <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+        </svg>
+        Premium Kalite Perde Çözümleri
+      </div>
+      <h1>Mekanlarınızı <span>Işıkla Şekillendirin</span></h1>
+      <p>Hazar Jaluz olarak, modern tasarımlarımızı yüksek kaliteli malzemelerle birleştiriyoruz. Evinize ve ofisinize özel jaluzi çözümlerimizi inceleyin.</p>
+      
+      <div class="hero-stats">
+        <div class="stat-item">
+          <h3>15+</h3>
+          <p>Yıllık Deneyim</p>
+        </div>
+        <div class="stat-item">
+          <h3>50+</h3>
+          <p>Tasarım Seçeneği</p>
+        </div>
+        <div class="stat-item">
+          <h3>100%</h3>
+          <p>Müşteri Memnuniyeti</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animasyonlu Jaluzi Görsel Efekti -->
+    <div class="hero-visual">
+      <div class="hero-visual-bg"></div>
+      <div class="hero-jaluzi-animation">
+        <div class="jaluzi-window-frame">
+          HAZAR Premium <span>Güneş Kontrol Sistemi</span>
+        </div>
+        <div class="jaluzi-slats">
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+          <div class="jaluzi-slat"></div>
+        </div>
+        <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; font-style: italic;">
+          Fare ile üzerine gelerek mekanizmayı çevirin
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filtreleme ve Arama -->
+  <section class="filter-section" id="katalog">
+    <div class="filter-bar">
+      <!-- Arama Kutusu -->
+      <div class="search-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Jaluzi modeli veya özellik ara...">
+      </div>
+
+      <!-- Kategori Filtre Butonları -->
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-category="all">Tümü</button>
+        <button class="filter-btn" data-category="zebra">Zebra</button>
+        <button class="filter-btn" data-category="ahsap">Ahşap</button>
+        <button class="filter-btn" data-category="stor">Stor</button>
+        <button class="filter-btn" data-category="metal">Metal</button>
+        <button class="filter-btn" data-category="dikey">Dikey</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ürünler Listesi -->
+  <section class="products-section">
+    <div class="products-grid" id="products-container">
+      <!-- JavaScript ile doldurulacak -->
+      <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+        <p style="color: var(--text-secondary);">Ürünler yükleniyor...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hakkımızda Bölümü -->
+  <section id="hakkimizda" style="max-width: 1200px; margin: 5rem auto; padding: 0 2rem; scroll-margin-top: 100px;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 3rem; display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; backdrop-filter: blur(10px);">
+      <div>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1.5rem; line-height: 1.2;">
+          Hazar Perde & <br><span style="color: var(--accent-gold);">Jaluzi Sistemleri</span>
+        </h2>
+        <div style="width: 60px; height: 3px; background: var(--accent-gold); margin-bottom: 1.5rem;"></div>
+      </div>
+      <div>
+        <p style="color: var(--text-secondary); margin-bottom: 1.2rem; font-size: 1.05rem;">
+          Yılların getirdiği tecrübe ve estetik anlayışıyla, yaşam alanlarınızı daha konforlu ve şık hale getiriyoruz. Geniş ürün yelpazemiz, kaliteli mekanizmalarımız ve profesyonel ekibimizle ölçü alımından montaja kadar tüm aşamalarda yanınızdayız.
+        </p>
+        <p style="color: var(--text-secondary); font-size: 1.05rem;">
+          Müşterilerimize modern, kullanışlı ve bütçe dostu jaluzi ve stor perde sistemleri sunmak en büyük önceliğimizdir. Ürünlerimizi dilediğiniz ebat ve renklerde tasarlatarak pencerelerinize mükemmel uyum sağlayabilirsiniz.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer / İletişim -->
+  <footer id="iletisim">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h4>HAZAR<span>JALUZ</span></h4>
+        <p>Premium jaluzi, stor ve dikey perde sistemleri ile pencerelerinize şıklık katın.</p>
+      </div>
+      <div class="footer-links">
+        <h5>Hızlı Linkler</h5>
+        <ul>
+          <li><a href="#katalog">Ürünlerimiz</a></li>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#iletisim">İletişim</a></li>
+          <li><a href="admin.html">Yönetici Girişi</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h5>İletişim Bilgileri</h5>
+        <p>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Bakü, Azerbaycan
+        </p>
+        <p>
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          +994 50 123 45 67
+        </p>
+        <p>
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          info@hazarjaluz.az
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Hazar Jaluz. Tüm Hakları Saklıdır.</p>
+      <p>Powered by Advanced Agentic Coding</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
