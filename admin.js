@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Config Kontrolü ve Rehber Gösterimi
   function checkConfig() {
-    if (typeof SUPABASE_URL === 'undefined' || SUPABASE_URL.includes('BURAYA_SUPABASE_PROJECT_URL')) {
+    if (typeof window.SUPABASE_URL === 'undefined' || !window.SUPABASE_URL || window.SUPABASE_URL.includes('BURAYA_SUPABASE_PROJECT_URL')) {
       // Eğer Supabase ayarları yapılmadıysa kurulum kılavuzunu göster
       adminGrid.innerHTML = `
         <div class="admin-card" style="grid-column: 1 / -1; max-width: 800px; margin: 0 auto;">
@@ -77,7 +77,7 @@ create table products (
             <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 8px;">
               <strong style="color: var(--text-primary); display: block; margin-bottom: 0.4rem;">4. Bağlantı Bilgilerini Sitenize Ekleyin</strong>
               <span style="color: var(--text-secondary); font-size: 0.95rem;">
-                Supabase ekranında sol alttaki <strong>Settings (Dişli simgesi) -> API</strong> sayfasına gidin. Buradaki <strong>Project URL</strong> ve <strong>anon public key</strong> değerlerini kopyalayın. Bilgisayarınızdaki <code style="color: var(--accent-gold);">public/config.js</code> dosyasını açıp ilgili alanlara yapıştırıp kaydedin.
+                Supabase ekranında sol alttaki <strong>Settings (Dişli simgesi) -> API</strong> sayfasına gidin. Buradaki <strong>Project URL</strong> ve <strong>anon public key</strong> değerlerini kopyalayın. Bilgisayarınızdaki <code style="color: var(--accent-gold);">config.js</code> dosyasını açıp ilgili alanlara yapıştırıp kaydedin.
               </span>
             </div>
           </div>
@@ -99,7 +99,7 @@ create table products (
     if (!checkConfig()) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await window.supabaseClient
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
@@ -294,14 +294,14 @@ create table products (
           const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
           
           // Storage'a yükle
-          const { data: uploadData, error: uploadError } = await supabase.storage
+          const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
             .from('product-images')
             .upload(fileName, file);
 
           if (uploadError) throw uploadError;
 
           // Public URL'ini al
-          const { data: { publicUrl } } = supabase.storage
+          const { data: { publicUrl } } = window.supabaseClient.storage
             .from('product-images')
             .getPublicUrl(fileName);
 
@@ -312,14 +312,14 @@ create table products (
             const currentProduct = products.find(p => p.id == id);
             const oldFileName = getFileNameFromUrl(currentProduct.image);
             if (oldFileName) {
-              await supabase.storage.from('product-images').remove([oldFileName]);
+              await window.supabaseClient.storage.from('product-images').remove([oldFileName]);
             }
           }
         }
 
         // 2. Veritabanına Yaz (Insert veya Update)
         if (isEditing) {
-          const { error } = await supabase
+          const { error } = await window.supabaseClient
             .from('products')
             .update({ name, category, price, description, image: imageUrl })
             .eq('id', id);
@@ -327,7 +327,7 @@ create table products (
           if (error) throw error;
           showToast('Jaluzi başarıyla güncellendi!', 'success');
         } else {
-          const { error } = await supabase
+          const { error } = await window.supabaseClient
             .from('products')
             .insert([{ name, category, price, description, image: imageUrl }]);
 
@@ -359,11 +359,11 @@ create table products (
       // 1. Storage'dan resmi sil
       const fileName = getFileNameFromUrl(product.image);
       if (fileName) {
-        await supabase.storage.from('product-images').remove([fileName]);
+        await window.supabaseClient.storage.from('product-images').remove([fileName]);
       }
 
       // 2. Veritabanından kaydı sil
-      const { error } = await supabase
+      const { error } = await window.supabaseClient
         .from('products')
         .delete()
         .eq('id', id);

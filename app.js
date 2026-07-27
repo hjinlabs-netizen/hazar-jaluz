@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Config kontrolü
   function checkConfig() {
-    if (typeof SUPABASE_URL === 'undefined' || SUPABASE_URL.includes('BURAYA_SUPABASE_PROJECT_URL')) {
+    if (typeof window.SUPABASE_URL === 'undefined' || !window.SUPABASE_URL || window.SUPABASE_URL.includes('BURAYA_SUPABASE_PROJECT_URL')) {
       productsContainer.innerHTML = `
         <div class="no-products" style="border-color: var(--accent-gold);">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
           <h3>Supabase Kurulumu Gerekli</h3>
           <p style="color: var(--text-secondary); max-width: 500px; margin: 0.5rem auto;">
-            Sitenizi yayına almadan önce lütfen <strong>public/config.js</strong> dosyasını açın ve kendi Supabase bilgilerinizi girin.
+            Sitenizi yayına almadan önce lütfen <strong>config.js</strong> dosyasını açın ve kendi Supabase bilgilerinizi girin.
           </p>
           <div style="margin-top: 1.5rem;">
             <a href="admin.html" class="btn btn-primary" style="width: auto;">Kurulum Rehberini İncele</a>
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       // Supabase'den verileri getir (tarihe göre sıralı)
-      const { data, error } = await supabase
+      const { data, error } = await window.supabaseClient
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
