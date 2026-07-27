@@ -22,15 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const imagePreview = document.getElementById('image-preview');
   const btnRemoveImage = document.getElementById('btn-remove-image');
   const toastContainer = document.getElementById('toast-container');
-  const adminGrid = document.querySelector('.admin-grid');
 
   // Kategorilerin okunaklı isimleri
   const categoryNames = {
-    zebra: 'Zebra Jaluzi',
-    ahsap: 'Ahşap Jaluzi',
-    stor: 'Stor Perde',
-    metal: 'Metal Jaluzi',
-    dikey: 'Dikey Perde'
+    zebra: 'Zebra Jalüz',
+    ahsap: 'Taxta Jalüz',
+    stor: 'Stor Pərdə',
+    metal: 'Metal Jalüz',
+    dikey: 'Şaquli Pərdə'
   };
 
   // Güvenlik ve Rol Yetkilendirme Kontrolü
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!session) {
         // Giriş yapılmamışsa kabinete yönlendir
-        alert('Bu alana girmək üçün əvvəlcə giriş etməlisiniz.');
+        alert('Bu hissəyə daxil olmaq üçün əvvəlcə giriş etməlisiniz.');
         window.location.href = 'kabinet.html';
         return;
       }
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!profile || profile.role !== 'admin') {
         // Kullanıcı admin değilse engelle ve yönlendir
-        alert('Bu alana daxil olmaq üçün "Admin" yetkiniz yoxdur!');
+        alert('Bu hissəyə daxil olmaq üçün "Admin" yetkiniz yoxdur!');
         window.location.href = 'kabinet.html';
         return;
       }
@@ -88,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderProductsTable();
     } catch (err) {
       console.error(err);
-      showToast('Ürün listesi veritabanından alınamadı!', 'error');
+      showToast('Məhsul siyahısı verilənlər bazasından alınmadı!', 'error');
     }
   }
 
@@ -98,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       productsListBody.innerHTML = `
         <tr>
           <td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 2rem;">
-            Katalogda kayıtlı ürün bulunmuyor.
+            Kataloqda qeyd edilmiş məhsul tapılmadı.
           </td>
         </tr>
       `;
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><strong>${product.price} AZN</strong></td>
           <td style="text-align: center;">
             <div class="table-actions">
-              <button class="btn-action btn-edit" data-id="${product.id}" title="Düzenle">
+              <button class="btn-action btn-edit" data-id="${product.id}" title="Düzəliş et">
                 <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               </button>
               <button class="btn-action btn-delete" data-id="${product.id}" title="Sil">
@@ -185,8 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!product) return;
 
     isEditing = true;
-    formTitle.innerText = 'Jaluzi Güncelle';
-    btnSubmitText.innerText = 'Değişiklikleri Kaydet';
+    formTitle.innerText = 'Jalüz Məlumatlarını Yenilə';
+    btnSubmitText.innerText = 'Dəyişiklikləri Yadda Saxla';
     btnCancelEdit.style.display = 'inline-flex';
 
     // Form alanlarını doldur
@@ -221,8 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function resetForm() {
     isEditing = false;
-    formTitle.innerText = 'Yeni Jaluzi Ekle';
-    btnSubmitText.innerText = 'Ürünü Yayınla';
+    formTitle.innerText = 'Yeni Jalüz Əlavə Et';
+    btnSubmitText.innerText = 'Məhsulu Paylaş';
     btnCancelEdit.style.display = 'none';
     
     productForm.reset();
@@ -256,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         btnSubmitText.disabled = true;
-        btnSubmitText.innerText = isEditing ? 'Güncelleniyor...' : 'Yükleniyor...';
+        btnSubmitText.innerText = isEditing ? 'Yenilənir...' : 'Yüklənir...';
 
         let imageUrl = null;
 
@@ -303,24 +302,24 @@ document.addEventListener('DOMContentLoaded', () => {
             .eq('id', id);
 
           if (error) throw error;
-          showToast('Jaluzi başarıyla güncellendi!', 'success');
+          showToast('Jalüz uğurla yeniləndi!', 'success');
         } else {
           const { error } = await window.supabaseClient
             .from('products')
             .insert([{ name, category, price, description, image: imageUrl }]);
 
           if (error) throw error;
-          showToast('Yeni jaluzi kataloğa eklendi!', 'success');
+          showToast('Yeni jalüz kataloqa əlavə edildi!', 'success');
         }
 
         resetForm();
         fetchProducts();
       } catch (err) {
         console.error(err);
-        showToast(err.message || 'Bir hata oluştu.', 'error');
+        showToast(err.message || 'Xəta baş verdi.', 'error');
       } finally {
         btnSubmitText.disabled = false;
-        btnSubmitText.innerText = isEditing ? 'Değişiklikleri Kaydet' : 'Ürünü Yayınla';
+        btnSubmitText.innerText = isEditing ? 'Dəyişiklikləri Yadda Saxla' : 'Məhsulu Paylaş';
       }
     });
   }
@@ -330,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const product = products.find(p => p.id == id);
     if (!product) return;
 
-    const confirmDelete = confirm(`"${product.name}" isimli jaluziyi silmek istediğinizden emin misiniz?`);
+    const confirmDelete = confirm(`"${product.name}" adlı jalüzü silmək istədiyinizdən əminsiniz?`);
     if (!confirmDelete) return;
 
     try {
@@ -348,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (error) throw error;
 
-      showToast('Jaluzi başarıyla silindi.', 'success');
+      showToast('Jalüz uğurla silindi.', 'success');
       
       if (productIdInput.value == id) {
         resetForm();
@@ -357,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchProducts();
     } catch (err) {
       console.error(err);
-      showToast('Silme işlemi sırasında hata oluştu.', 'error');
+      showToast('Silinmə zamanı xəta baş verdi.', 'error');
     }
   }
 
@@ -370,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'kabinet.html';
       } catch (err) {
         console.error(err);
-        showToast('Çıkış yapılamadı.', 'error');
+        showToast('Çıxış edilə bilmədi.', 'error');
       }
     });
   }

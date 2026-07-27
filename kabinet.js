@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
       kabinetContent.innerHTML = `
         <div class="auth-card" style="text-align: center;">
           <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: var(--accent-gold); margin-bottom: 1rem;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; color: var(--bg-dark);">Supabase Kurulumu Gerekli</h2>
+          <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; color: var(--bg-dark);">Supabase Quraşdırılması Lazımdır</h2>
           <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
             Müştəri kabinetinin işləməsi üçün ilk öncə <strong>config.js</strong> faylına Supabase məlumatlarınızı daxil etməlisiniz.
           </p>
@@ -41,19 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
           .maybeSingle();
 
         if (profileError) {
-          console.error('Profil çekme hatası:', profileError);
+          console.error('Profil çəkilmə xətası:', profileError);
         }
 
         if (profile) {
           role = profile.role;
         } else {
-          // Eğer profil kaydı yoksa otomatik oluştur (Geriye dönük uyumluluk)
+          // Eğer profil kaydı yoksa otomatik oluştur
           try {
             await window.supabaseClient
               .from('profiles')
               .insert([{ id: user.id, email: user.email, role: 'user' }]);
           } catch (insertErr) {
-            console.error('Profil oluşturulamadı:', insertErr);
+            console.error('Profil yaradıla bilmədi:', insertErr);
           }
         }
 
@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showLogin();
       }
     } catch (err) {
-      console.error('Kabinet başlatılamadı:', err);
-      showToast('Oturum bilgileri doğrulanırken hata oluştu.', 'error');
+      console.error('Kabinet başladılarkən xəta:', err);
+      showToast('Sessiya məlumatları yoxlanılarkən xəta baş verdi.', 'error');
     }
   }
 
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="auth-divider"><span>və ya</span></div>
         
         <a href="#" id="link-to-register" class="auth-toggle-link">Yeni hesab yarat</a>
-        <a href="index.html" style="display: block; text-align: center; margin-top: 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">← Kataloğa Geri Dön</a>
+        <a href="index.html" style="display: block; text-align: center; margin-top: 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">← Kataloqa Geri Dön</a>
       </div>
     `;
 
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="auth-divider"><span>və ya</span></div>
         
         <a href="#" id="link-to-login" class="auth-toggle-link">Mövcud hesabla daxil ol</a>
-        <a href="index.html" style="display: block; text-align: center; margin-top: 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">← Kataloğa Geri Dön</a>
+        <a href="index.html" style="display: block; text-align: center; margin-top: 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">← Kataloqa Geri Dön</a>
       </div>
     `;
 
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="dashboard-info-item">
             <strong>Status / Rol:</strong>
-            <span class="badge-role">${isAdmin ? 'Yönetici (Admin)' : 'Müştəri'}</span>
+            <span class="badge-role">${isAdmin ? 'İdarəçi (Admin)' : 'Müştəri'}</span>
           </div>
           <div class="dashboard-info-item">
             <strong>Sifariş İzləmə:</strong>
@@ -184,10 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           ${isAdmin 
-            ? `<a href="admin.html" class="btn btn-primary" style="background: var(--bg-dark); box-shadow: none;">⚙️ Yönetim Paneline Git</a>` 
-            : `<a href="index.html" class="btn btn-primary">🛒 Alış-Verişə Başla</a>`
+            ? `<a href="admin.html" class="btn btn-primary" style="background: var(--bg-dark); box-shadow: none;">⚙️ İdarəetmə Panelinə Keç</a>` 
+            : `<a href="index.html" class="btn btn-primary">🛒 Kataloqa Bax</a>`
           }
-          <button id="btn-logout-auth" class="btn btn-secondary" style="border-color: #ef4444; color: #ef4444;">Çıkış Yap</button>
+          <button id="btn-logout-auth" class="btn btn-secondary" style="border-color: #ef4444; color: #ef4444;">Çıxış Et</button>
         </div>
       </div>
     `;
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       btn.disabled = true;
-      btn.innerText = 'Giriş edilir...';
+      btn.innerText = 'Daxil olunur...';
 
       const { error } = await window.supabaseClient.auth.signInWithPassword({ email, password });
       if (error) throw error;
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 800);
     } catch (err) {
       console.error(err);
-      showToast(err.message || 'Giriş edilərkən xəta baş verdi.', 'error');
+      showToast(err.message || 'Giriş zamanı xəta baş verdi.', 'error');
       btn.disabled = false;
       btn.innerText = 'Daxil Ol';
     }
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.reload();
         }, 1200);
       } else {
-        showToast('E-poçt ünvanınızı təsdiqləyin (Əgər təsdiq aktivdirsə).', 'success');
+        showToast('E-poçt ünvanınızı təsdiqləyin (Əgər aktivdirsə).', 'success');
       }
     } catch (err) {
       console.error(err);
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 800);
     } catch (err) {
       console.error(err);
-      showToast('Çıxış edilərkən xəta baş verdi.', 'error');
+      showToast('Çıxış zamanı xəta baş verdi.', 'error');
     }
   }
 

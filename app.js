@@ -22,15 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Kategorilerin okunaklı isimleri
   const categoryNames = {
-    all: 'Tümü',
-    zebra: 'Zebra Jaluzi',
-    ahsap: 'Ahşap Jaluzi',
-    stor: 'Stor Perde',
-    metal: 'Metal Jaluzi',
-    dikey: 'Dikey Perde'
+    all: 'Hamısı',
+    zebra: 'Zebra Jalüz',
+    ahsap: 'Taxta Jalüz',
+    stor: 'Stor Pərdə',
+    metal: 'Metal Jalüz',
+    dikey: 'Şaquli Pərdə'
   };
 
-  // WhatsApp Sipariş Numarası (Kullanıcı dilerse değiştirebilir)
+  // WhatsApp Sipariş Numarası
   const WHATSAPP_NUMBER = '994501234567'; 
 
   // Config kontrolü
@@ -39,12 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
       productsContainer.innerHTML = `
         <div class="no-products" style="border-color: var(--accent-gold);">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          <h3>Supabase Kurulumu Gerekli</h3>
+          <h3>Supabase Quraşdırılması Lazımdır</h3>
           <p style="color: var(--text-secondary); max-width: 500px; margin: 0.5rem auto;">
-            Sitenizi yayına almadan önce lütfen <strong>config.js</strong> dosyasını açın ve kendi Supabase bilgilerinizi girin.
+            Saytınızı yayımlamadan əvvəl zəhmət olmasa <strong>config.js</strong> faylını açın və Supabase məlumatlarınızı daxil edin.
           </p>
           <div style="margin-top: 1.5rem;">
-            <a href="kabinet.html" class="btn btn-primary" style="width: auto;">Kurulum Rehberini İncele</a>
+            <a href="kabinet.html" class="btn btn-primary" style="width: auto;">Quraşdırma Təlimatını Oxu</a>
           </div>
         </div>
       `;
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       productsContainer.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
-          <p style="color: var(--text-secondary);">Ürünler yükleniyor...</p>
+          <p style="color: var(--text-secondary);">Məhsullar yüklənir...</p>
         </div>
       `;
 
@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
       productsContainer.innerHTML = `
         <div class="no-products">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          <h3>Bağlantı Hatası</h3>
-          <p style="color: var(--text-secondary);">Supabase veritabanına bağlanılamadı. Bilgilerinizi doğru girdiğinizden emin olun.</p>
+          <h3>Bağlantı Xətası</h3>
+          <p style="color: var(--text-secondary);">Supabase verilənlər bazasına qoşulmaq mümkün olmadı. Məlumatları düzgün daxil etdiyinizdən əmin olun.</p>
         </div>
       `;
     }
@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
       productsContainer.innerHTML = `
         <div class="no-products">
           <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <h3>Ürün Bulunamadı</h3>
-          <p style="color: var(--text-secondary);">Aramanıza veya seçtiğiniz kategoriye uygun jaluzi modeli bulunmuyor.</p>
+          <h3>Məhsul tapılmadı</h3>
+          <p style="color: var(--text-secondary);">Axtarışınıza və ya seçdiyiniz kateqoriyaya uyğun jalüz modeli tapılmadı.</p>
         </div>
       `;
       return;
@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
     productsContainer.innerHTML = filteredProducts.map(product => {
       const categoryLabel = categoryNames[product.category] || product.category;
       
-      // WhatsApp mesaj metnini hazırla (Azerice/Türkçe olarak)
+      // WhatsApp mesaj metni
       const encodedMsg = encodeURIComponent(
-        `Salam Hazar Jaluz! Saytınızda gördüyüm bu məhsul haqqında məlumat almaq istəyirəm:\n\n` +
+        `Salam Hazar Jalüz! Saytınızda gördüyüm bu məhsul haqqında məlumat almaq istəyirəm:\n\n` +
         `📦 *Məhsul:* ${product.name}\n` +
         `📂 *Kateqoriya:* ${categoryLabel}\n` +
         `💰 *Qiymət:* ${product.price} AZN / m²\n\n` +
@@ -136,9 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="product-badge">${categoryLabel}</span>
           </div>
           <div class="product-info">
-            <span class="product-category-text">${product.category}</span>
+            <span class="product-category-text">${categoryLabel}</span>
             <h3 class="product-name">${product.name}</h3>
-            <p class="product-desc">${product.description || 'Bu jaluzi modeli üçün açıklama belirtilmemiş.'}</p>
+            <p class="product-desc">${product.description || 'Bu jalüz modeli üçün heç bir təsvir qeyd edilməyib.'}</p>
             <div class="product-footer">
               <div class="product-price">
                 <span class="product-price-label">Başlanğıc Qiyməti</span>
