@@ -3,10 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isEditing = false;
 
   // DOM Elemanları
-  const loginOverlay = document.getElementById('login-overlay');
-  const loginForm = document.getElementById('login-form');
-  const adminPasswordInput = document.getElementById('admin-password');
-  const adminMainContent = document.getElementById('admin-main-content');
+  const adminBody = document.getElementById('admin-body');
   const btnLogout = document.getElementById('btn-logout');
 
   const productsListBody = document.getElementById('admin-products-list');
@@ -36,128 +33,49 @@ document.addEventListener('DOMContentLoaded', () => {
     dikey: 'Dikey Perde'
   };
 
-  // Güvenli Şifre Kontrolü (Şifre: hazar2026)
-  // hazar2026 şifresinin SHA-256 Hash karşılığı
-  const ADMIN_PASSWORD_HASH = "33e695d38a0f9b65743c3a9f0fa9cc0c3a2f3fcf2f4f2c5ef2cd33e8c950269f";
+  // Güvenlik ve Rol Yetkilendirme Kontrolü
+  async function checkAuth() {
+    try {
+      // 1. Supabase Oturumunu Kontrol Et
+      const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+      if (error) throw error;
 
-  // SHA-256 Hash Hesaplama Fonksiyonu
-  async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  // Oturum Kontrolü
-  function checkSession() {
-    const isAuthenticated = sessionStorage.getItem('hazar_admin_auth') === 'true';
-    if (isAuthenticated) {
-      loginOverlay.style.display = 'none';
-      adminMainContent.style.display = 'block';
-      fetchProducts(); // Ürünleri çek
-    } else {
-      loginOverlay.style.display = 'flex';
-      adminMainContent.style.display = 'none';
-    }
-  }
-
-  // Giriş Yapma Formu Dinleyicisi
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const enteredPassword = adminPasswordInput.value;
-      const enteredHash = await sha256(enteredPassword);
-
-      if (enteredHash === ADMIN_PASSWORD_HASH) {
-        sessionStorage.setItem('hazar_admin_auth', 'true');
-        showToast('Giriş başarılı! Hoş geldiniz.', 'success');
-        checkSession();
-      } else {
-        showToast('Hatalı şifre! Lütfen tekrar deneyin.', 'error');
-        adminPasswordInput.value = '';
-        adminPasswordInput.focus();
+      if (!session) {
+        // Giriş yapılmamışsa kabinete yönlendir
+        alert('Bu alana girmək üçün əvvəlcə giriş etməlisiniz.');
+        window.location.href = 'kabinet.html';
+        return;
       }
-    });
-  }
 
-  // Çıkış Yapma Butonu Dinleyicisi
-  if (btnLogout) {
-    btnLogout.addEventListener('click', (e) => {
-      e.preventDefault();
-      sessionStorage.removeItem('hazar_admin_auth');
-      window.location.reload();
-    });
-  }
+      // 2. Profiles Tablosundan Kullanıcı Rolünü Çek
+      const { data: profile, error: profileError } = await window.supabaseClient
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .maybeSingle();
 
-  // Config Kontrolü ve Rehber Gösterimi
-  function checkConfig() {
-    if (typeof window.SUPABASE_URL === 'undefined' || !window.SUPABASE_URL || window.SUPABASE_URL.includes('BURAYA_SUPABASE_PROJECT_URL')) {
-      // Eğer Supabase ayarları yapılmadıysa kurulum kılavuzunu göster
-      adminGrid.innerHTML = `
-        <div class="admin-card" style="grid-column: 1 / -1; max-width: 800px; margin: 0 auto;">
-          <h3 style="color: var(--accent-gold); font-size: 1.6rem; border-left: 4px solid var(--accent-gold); padding-left: 0.8rem; margin-bottom: 1.5rem;">
-            ☁️ Supabase Kurulum Rehberi (Son Adım!)
-          </h3>
-          <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.05rem;">
-            Sitenizi yayına almak, kodlama yapmadan jaluzi ekleyip silmek için ücretsiz bir <strong>Supabase</strong> hesabı oluşturmanız gerekir. Aşağıdaki 4 adımı sırayla uygulayın:
-          </p>
-          
-          <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
-            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 8px;">
-              <strong style="color: var(--text-primary); display: block; margin-bottom: 0.4rem;">1. Üye Olun ve Proje Oluşturun</strong>
-              <span style="color: var(--text-secondary); font-size: 0.95rem;">
-                <a href="https://supabase.com" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">Supabase.com</a> sitesine gidin, ücretsiz üye olun ve <strong>"New Project"</strong> diyerek <strong>Hazar Jaluz</strong> adında bir proje oluşturun. Güçlü bir şifre belirleyin.
-              </span>
-            </div>
+      if (profileError) throw profileError;
 
-            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 8px;">
-              <strong style="color: var(--text-primary); display: block; margin-bottom: 0.4rem;">2. Tabloyu Oluşturun (SQL Editörü)</strong>
-              <span style="color: var(--text-secondary); font-size: 0.95rem;">
-                Sol menüdeki <strong>SQL Editor</strong> simgesine tıklayın. <strong>"New Query"</strong> seçin, aşağıdaki kodu yapıştırıp sağ alttaki <strong>"Run"</strong> butonuna basın:
-              </span>
-              <pre style="background: #0a0b0d; padding: 1rem; border-radius: 6px; color: #4db6ac; overflow-x: auto; font-size: 0.85rem; margin-top: 0.8rem; border: 1px solid rgba(255,255,255,0.05);">
-create table products (
-  id bigint generated by default as identity primary key,
-  name text not null,
-  category text not null,
-  price numeric not null,
-  description text,
-  image text,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);</pre>
-            </div>
+      if (!profile || profile.role !== 'admin') {
+        // Kullanıcı admin değilse engelle ve yönlendir
+        alert('Bu alana daxil olmaq üçün "Admin" yetkiniz yoxdur!');
+        window.location.href = 'kabinet.html';
+        return;
+      }
 
-            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 8px;">
-              <strong style="color: var(--text-primary); display: block; margin-bottom: 0.4rem;">3. Resim Klasörünü Oluşturun (Storage)</strong>
-              <span style="color: var(--text-secondary); font-size: 0.95rem;">
-                Sol menüdeki <strong>Storage</strong> simgesine tıklayın. <strong>"New Bucket"</strong> butonuna basın. Kova ismini küçük harflerle <code style="color: var(--accent-gold); background: rgba(212,175,55,0.1); padding: 2px 6px; border-radius: 4px;">product-images</code> yapın. Altındaki <strong>"Public bucket"</strong> seçeneğini mutlaka <strong>aktif hale getirin</strong> ve kaydedin.
-              </span>
-            </div>
+      // 3. Yetkili ise ekranı göster ve ürünleri çek
+      adminBody.style.display = 'block';
+      fetchProducts();
 
-            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 8px;">
-              <strong style="color: var(--text-primary); display: block; margin-bottom: 0.4rem;">4. Bağlantı Bilgilerini Sitenize Ekleyin</strong>
-              <span style="color: var(--text-secondary); font-size: 0.95rem;">
-                Supabase ekranında sol alttaki <strong>Settings (Dişli simgesi) -> API</strong> sayfasına gidin. Buradaki <strong>Project URL</strong> ve <strong>anon public key</strong> değerlerini kopyalayın. Bilgisayarınızdaki <code style="color: var(--accent-gold);">config.js</code> dosyasını açıp ilgili alanlara yapıştırıp kaydedin.
-              </span>
-            </div>
-          </div>
-          
-          <div style="text-align: center;">
-            <button onclick="window.location.reload();" class="btn btn-primary" style="width: auto; padding: 0.8rem 2rem;">
-              Bilgileri Kaydettim, Sayfayı Yenile 🔄
-            </button>
-          </div>
-        </div>
-      `;
-      return false;
+    } catch (err) {
+      console.error('Yetkilendirme Hatası:', err);
+      alert('Sistem xətası baş verdi. Kabinetə yönləndirilirsiniz.');
+      window.location.href = 'kabinet.html';
     }
-    return true;
   }
 
   // 1. Ürünleri Supabase'den Getir
   async function fetchProducts() {
-    if (!checkConfig()) return;
-
     try {
       const { data, error } = await window.supabaseClient
         .from('products')
@@ -196,7 +114,7 @@ create table products (
             ${product.image 
               ? `<img src="${product.image}" class="table-img" alt="${product.name}">` 
               : `
-                <div class="table-img" style="display:flex; align-items:center; justify-content:center; background:#161a21; color:var(--accent-gold);">
+                <div class="table-img" style="display:flex; align-items:center; justify-content:center; background:#eae5db; color:var(--accent-gold);">
                   <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h14v14zM5 3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5z"/></svg>
                 </div>
               `
@@ -443,7 +361,21 @@ create table products (
     }
   }
 
-  // 9. Toast Bildirim Sistemi
+  // Çıkış Yapma İşlemi
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await window.supabaseClient.auth.signOut();
+        window.location.href = 'kabinet.html';
+      } catch (err) {
+        console.error(err);
+        showToast('Çıkış yapılamadı.', 'error');
+      }
+    });
+  }
+
+  // Toast Bildirim Sistemi
   function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
@@ -459,7 +391,6 @@ create table products (
 
     toastContainer.appendChild(toast);
 
-    // 3 saniye sonra kaldır
     setTimeout(() => {
       toast.style.animation = 'slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse forwards';
       setTimeout(() => {
@@ -468,6 +399,6 @@ create table products (
     }, 3000);
   }
 
-  // Başlangıçta Oturum Kontrolü yap
-  checkSession();
+  // Güvenlik doğrulamasını başlat
+  checkAuth();
 });

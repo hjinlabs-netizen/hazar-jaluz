@@ -7,6 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('search-input');
   const filterButtons = document.querySelectorAll('.filter-btn');
 
+  // Swiper Slider Başlat
+  const heroSwiper = new Swiper('.swiper-hero', {
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+
   // Kategorilerin okunaklı isimleri
   const categoryNames = {
     all: 'Tümü',
@@ -31,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Sitenizi yayına almadan önce lütfen <strong>config.js</strong> dosyasını açın ve kendi Supabase bilgilerinizi girin.
           </p>
           <div style="margin-top: 1.5rem;">
-            <a href="admin.html" class="btn btn-primary" style="width: auto;">Kurulum Rehberini İncele</a>
+            <a href="kabinet.html" class="btn btn-primary" style="width: auto;">Kurulum Rehberini İncele</a>
           </div>
         </div>
       `;
@@ -97,13 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
     productsContainer.innerHTML = filteredProducts.map(product => {
       const categoryLabel = categoryNames[product.category] || product.category;
       
-      // WhatsApp mesaj metnini hazırla
+      // WhatsApp mesaj metnini hazırla (Azerice/Türkçe olarak)
       const encodedMsg = encodeURIComponent(
-        `Merhaba Hazar Jaluz! Sitenizdeki bu ürün hakkında bilgi almak istiyorum:\n\n` +
-        `📦 *Ürün:* ${product.name}\n` +
-        `📂 *Kategori:* ${categoryLabel}\n` +
-        `💰 *Fiyat:* ${product.price} AZN / m²\n\n` +
-        `Ölçü alımı ve sipariş detayları için benimle iletişime geçer misiniz?`
+        `Salam Hazar Jaluz! Saytınızda gördüyüm bu məhsul haqqında məlumat almaq istəyirəm:\n\n` +
+        `📦 *Məhsul:* ${product.name}\n` +
+        `📂 *Kateqoriya:* ${categoryLabel}\n` +
+        `💰 *Qiymət:* ${product.price} AZN / m²\n\n` +
+        `Ölçü götürülməsi və sifariş üçün mənimlə əlaqə saxlaya bilərsinizmi?`
       );
       const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMsg}`;
 
@@ -125,17 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-info">
             <span class="product-category-text">${product.category}</span>
             <h3 class="product-name">${product.name}</h3>
-            <p class="product-desc">${product.description || 'Bu jaluzi modeli için açıklama belirtilmemiş.'}</p>
+            <p class="product-desc">${product.description || 'Bu jaluzi modeli üçün açıklama belirtilmemiş.'}</p>
             <div class="product-footer">
               <div class="product-price">
-                <span class="product-price-label">Başlangıç Fiyatı</span>
+                <span class="product-price-label">Başlanğıc Qiyməti</span>
                 <span class="product-price-value">${product.price}<span>AZN/m²</span></span>
               </div>
               <a href="${whatsappUrl}" target="_blank" class="btn-order-whatsapp">
                 <svg viewBox="0 0 24 24">
                   <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01-1.87-1.87-4.36-2.9-7.01-2.9zm5.79 14c-.24.68-1.42 1.3-1.95 1.38-.49.07-1.12.11-3.23-.76-2.69-1.11-4.42-3.86-4.56-4.05-.13-.19-1.11-1.48-1.11-2.81 0-1.33.7-1.98.94-2.24.24-.26.54-.33.72-.33.18 0 .36.01.52.02.16.01.38-.06.59.44.22.54.76 1.85.83 1.98.07.13.11.29.02.46-.09.18-.17.29-.33.48-.16.19-.34.42-.49.56-.16.16-.33.34-.14.67.19.32.84 1.39 1.8 2.25.96.86 1.78 1.12 2.03 1.25.25.13.39.11.54-.06.15-.17.63-.73.8-1 .17-.26.34-.22.58-.13.24.09 1.53.72 1.8 1 .27.13.45.24.51.35.07.11.07.65-.17 1.33z"/>
                 </svg>
-                Teklif Al
+                Sifariş Et
               </a>
             </div>
           </div>
