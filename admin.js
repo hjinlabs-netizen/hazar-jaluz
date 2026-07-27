@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let products = [];
   let isEditing = false;
 
+  // DOM Elemanları
+  const loginOverlay = document.getElementById('login-overlay');
+  const loginForm = document.getElementById('login-form');
+  const adminPasswordInput = document.getElementById('admin-password');
+  const adminMainContent = document.getElementById('admin-main-content');
+  const btnLogout = document.getElementById('btn-logout');
+
   const productsListBody = document.getElementById('admin-products-list');
   const productForm = document.getElementById('product-form');
   const formTitle = document.getElementById('form-title');
@@ -28,6 +35,59 @@ document.addEventListener('DOMContentLoaded', () => {
     metal: 'Metal Jaluzi',
     dikey: 'Dikey Perde'
   };
+
+  // Güvenli Şifre Kontrolü (Şifre: hazar2026)
+  // hazar2026 şifresinin SHA-256 Hash karşılığı
+  const ADMIN_PASSWORD_HASH = "33e695d38a0f9b65743c3a9f0fa9cc0c3a2f3fcf2f4f2c5ef2cd33e8c950269f";
+
+  // SHA-256 Hash Hesaplama Fonksiyonu
+  async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Oturum Kontrolü
+  function checkSession() {
+    const isAuthenticated = sessionStorage.getItem('hazar_admin_auth') === 'true';
+    if (isAuthenticated) {
+      loginOverlay.style.display = 'none';
+      adminMainContent.style.display = 'block';
+      fetchProducts(); // Ürünleri çek
+    } else {
+      loginOverlay.style.display = 'flex';
+      adminMainContent.style.display = 'none';
+    }
+  }
+
+  // Giriş Yapma Formu Dinleyicisi
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const enteredPassword = adminPasswordInput.value;
+      const enteredHash = await sha256(enteredPassword);
+
+      if (enteredHash === ADMIN_PASSWORD_HASH) {
+        sessionStorage.setItem('hazar_admin_auth', 'true');
+        showToast('Giriş başarılı! Hoş geldiniz.', 'success');
+        checkSession();
+      } else {
+        showToast('Hatalı şifre! Lütfen tekrar deneyin.', 'error');
+        adminPasswordInput.value = '';
+        adminPasswordInput.focus();
+      }
+    });
+  }
+
+  // Çıkış Yapma Butonu Dinleyicisi
+  if (btnLogout) {
+    btnLogout.addEventListener('click', (e) => {
+      e.preventDefault();
+      sessionStorage.removeItem('hazar_admin_auth');
+      window.location.reload();
+    });
+  }
 
   // Config Kontrolü ve Rehber Gösterimi
   function checkConfig() {
@@ -408,6 +468,6 @@ create table products (
     }, 3000);
   }
 
-  // Sayfa açıldığında verileri yükle
-  fetchProducts();
+  // Başlangıçta Oturum Kontrolü yap
+  checkSession();
 });
